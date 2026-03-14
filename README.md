@@ -1,2 +1,2 @@
-# juanEstivenSalasA_construccionSotfware2
+# juanSalas_andresTrujillo_construccionSotfware2
 proyectoEntregable
