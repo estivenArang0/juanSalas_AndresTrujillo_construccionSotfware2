@@ -1,6 +1,5 @@
-package construccion2;
+package construccion2.demo.domain.models;
 
-import construccion2.demo.Person;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;

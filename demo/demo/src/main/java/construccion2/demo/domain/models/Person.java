@@ -1,4 +1,4 @@
-package construccion2.demo;
+package construccion2.demo.domain.models;
     
 import lombok.Data;
 import lombok.NoArgsConstructor;
