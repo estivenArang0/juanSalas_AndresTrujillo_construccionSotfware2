@@ -4,11 +4,11 @@ import com.banco.application.dto.request.AuditLogRequest;
 import com.banco.application.port.output.AuditLogOutputPort;
 import com.banco.domain.exception.ResourceNotFoundException;
 import com.banco.domain.exception.UnauthorizedOperationException;
-import com.banco.domain.model.entity.CompanyClient;
+import com.banco.domain.model.entity.NaturalPersonClient;
 import com.banco.domain.model.entity.User;
 import com.banco.domain.model.valueobject.UserRole;
 import com.banco.domain.repository.BankAccountRepository;
-import com.banco.domain.repository.CompanyClientRepository;
+import com.banco.domain.repository.NaturalPersonClientRepository;
 import com.banco.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,56 +18,55 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CompanyClientDeleteService {
+public class NaturalPersonClientDeleteService {
 
-    private final CompanyClientRepository companyClientRepository;
+    private final NaturalPersonClientRepository naturalPersonClientRepository;
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
     private final AuditLogOutputPort auditLog;
 
-    public void delete(String taxId, Long requestingUserId) {
+    public void delete(String identificationNumber, Long requestingUserId) {
 
-        // Solo analistas internos pueden eliminar clientes empresa
+        // Solo analistas internos pueden eliminar clientes
         User requestingUser = userRepository.findById(requestingUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Usuario no encontrado: " + requestingUserId));
 
         if (!requestingUser.hasRole(UserRole.INTERNAL_ANALYST)) {
             throw new UnauthorizedOperationException(
-                    "Solo analistas internos pueden eliminar clientes empresa");
+                    "Solo analistas internos pueden eliminar clientes");
         }
 
-        CompanyClient company = companyClientRepository.findByTaxId(taxId)
+        NaturalPersonClient client = naturalPersonClientRepository.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "No existe una empresa registrada con el NIT: " + taxId));
+                        "Cliente no encontrado con identificación: " + identificationNumber));
 
-        // No se puede eliminar una empresa que tiene cuentas bancarias activas
-        boolean hasActiveAccounts = bankAccountRepository.findByOwnerId(taxId)
+        // No se puede eliminar un cliente que tiene cuentas bancarias activas
+        boolean hasActiveAccounts = bankAccountRepository.findByOwnerId(identificationNumber)
                 .stream()
                 .anyMatch(account -> account.isActive());
 
         if (hasActiveAccounts) {
             throw new UnauthorizedOperationException(
-                    "No se puede eliminar la empresa con NIT " + taxId +
-                    " porque tiene cuentas bancarias activas");
+                    "No se puede eliminar el cliente porque tiene cuentas bancarias activas");
         }
 
-        // Desactivar antes de eliminar para dejar trazabilidad
-        company.deactivate();
-        companyClientRepository.save(company);
+        // Borrado lógico: desactivar antes de eliminar físicamente (o solo desactivar según política)
+        client.deactivate();
+        naturalPersonClientRepository.save(client);
 
         auditLog.log(AuditLogRequest.builder()
-                .operationType("COMPANY_CLIENT_DELETED")
+                .operationType("NATURAL_PERSON_CLIENT_DELETED")
                 .operationDateTime(LocalDateTime.now())
                 .userId(requestingUserId)
                 .userRole(requestingUser.getRole().name())
-                .affectedProductId(taxId)
+                .affectedProductId(identificationNumber)
                 .details(Map.of(
-                        "taxId", taxId,
-                        "legalName", company.getBusinessName(),
-                        "deletedBy", requestingUserId,
-                        "finalStatus", "INACTIVE"
+                        "identificationNumber", identificationNumber,
+                        "deletedBy", requestingUserId
                 ))
                 .build());
+        
+        // naturalPersonClientRepository.deleteByIdentificationNumber(identificationNumber);
     }
 }

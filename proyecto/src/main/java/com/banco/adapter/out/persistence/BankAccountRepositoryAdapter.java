@@ -35,4 +35,9 @@ public class BankAccountRepositoryAdapter implements BankAccountRepository {
     public boolean existsByAccountNumber(String accountNumber) {
         return jpa.existsByAccountNumber(accountNumber);
     }
+
+    @Override
+    public void deleteByAccountNumber(String accountNumber) {
+        jpa.deleteByAccountNumber(accountNumber);
+    }
 }

@@ -1,6 +1,7 @@
 package com.banco.domain.service;
 
 import com.banco.application.dto.request.AuditLogRequest;
+import com.banco.application.dto.request.UpdateCompanyClientRequest;
 import com.banco.application.dto.response.CompanyClientResponse;
 import com.banco.application.port.output.AuditLogOutputPort;
 import com.banco.domain.exception.ResourceNotFoundException;
@@ -8,7 +9,7 @@ import com.banco.domain.exception.UnauthorizedOperationException;
 import com.banco.domain.model.entity.CompanyClient;
 import com.banco.domain.model.entity.User;
 import com.banco.domain.model.valueobject.UserRole;
-import com.banco.domain.repository.CorporateCustomerRepository;
+import com.banco.domain.repository.CompanyClientRepository;
 import com.banco.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,47 +21,40 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CompanyClientUpdateService {
 
-    private final CorporateCustomerRepository corporateCustomerRepository;
+    private final CompanyClientRepository companyClientRepository;
     private final UserRepository userRepository;
     private final AuditLogOutputPort auditLog;
 
-    public CompanyClientResponse update(String taxId, String newEmail,
-                                        String newPhone, String newAddress,
-                                        Long requestingUserId) {
+    public CompanyClientResponse update(String taxId, UpdateCompanyClientRequest request, Long requestingUserId) {
 
         User requestingUser = userRepository.findById(requestingUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Usuario no encontrado: " + requestingUserId));
 
-        // Solo empleados comerciales o analistas pueden actualizar clientes empresa
-        if (!requestingUser.hasRole(UserRole.COMMERCIAL_EMPLOYEE) &&
-            !requestingUser.hasRole(UserRole.INTERNAL_ANALYST)) {
+        // Solo clientes empresa o empleados comerciales/analistas pueden actualizar
+        if (requestingUser.hasRole(UserRole.COMPANY_CLIENT)) {
+            if (!taxId.equals(requestingUser.getIdentificationNumber())) {
+                throw new UnauthorizedOperationException(
+                        "No tienes permiso para actualizar información de otra empresa");
+            }
+        } else if (!requestingUser.hasRole(UserRole.COMMERCIAL_EMPLOYEE) &&
+                   !requestingUser.hasRole(UserRole.INTERNAL_ANALYST)) {
             throw new UnauthorizedOperationException(
-                    "Solo empleados comerciales o analistas pueden actualizar clientes empresa");
+                    "No tienes permiso para actualizar información de empresas");
         }
 
-        if (!companyClientExists(taxId)) {
-            throw new ResourceNotFoundException(
-                    "No existe una empresa registrada con el NIT: " + taxId);
-        }
-
-        CompanyClient company = corporateCustomerRepository.findByTaxId(taxId)
+        CompanyClient company = companyClientRepository.findByTaxId(taxId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "No existe una empresa registrada con el NIT: " + taxId));
+                        "Empresa no encontrada con NIT: " + taxId));
 
-        // Solo se pueden actualizar campos de contacto — el NIT y razón social son inmutables
-        CompanyClient updated = CompanyClient.builder()
-                .id(company.getId())
-                .businessName(company.getBusinessName())
-                .taxId(company.getTaxId())
-                .email(newEmail != null && !newEmail.isBlank() ? newEmail : company.getEmail())
-                .phoneNumber(newPhone != null && !newPhone.isBlank() ? newPhone : company.getPhoneNumber())
-                .address(newAddress != null && !newAddress.isBlank() ? newAddress : company.getAddress())
-                .legalRepresentativeId(company.getLegalRepresentativeId())
-                .status(company.getStatus())
-                .build();
+        // Actualizar campos
+        if (request.getLegalName() != null) company.setBusinessName(request.getLegalName());
+        if (request.getEmail() != null) company.setEmail(request.getEmail());
+        if (request.getPhone() != null) company.setPhone(request.getPhone());
+        if (request.getAddress() != null) company.setAddress(request.getAddress());
+        if (request.getLegalRepresentativeId() != null) company.setLegalRepresentativeId(request.getLegalRepresentativeId());
 
-        CompanyClient saved = corporateCustomerRepository.save(updated);
+        CompanyClient saved = companyClientRepository.save(company);
 
         auditLog.log(AuditLogRequest.builder()
                 .operationType("COMPANY_CLIENT_UPDATED")
@@ -70,16 +64,11 @@ public class CompanyClientUpdateService {
                 .affectedProductId(taxId)
                 .details(Map.of(
                         "taxId", taxId,
-                        "updatedFields", "email, phone, address",
                         "updatedBy", requestingUserId
                 ))
                 .build());
 
         return toResponse(saved);
-    }
-
-    private boolean companyClientExists(String taxId) {
-        return corporateCustomerRepository.existsByTaxId(taxId);
     }
 
     private CompanyClientResponse toResponse(CompanyClient company) {
@@ -88,7 +77,7 @@ public class CompanyClientUpdateService {
                 .legalName(company.getBusinessName())
                 .taxId(company.getTaxId())
                 .email(company.getEmail())
-                .phone(company.getPhoneNumber())
+                .phone(company.getPhone())
                 .address(company.getAddress())
                 .legalRepresentativeId(company.getLegalRepresentativeId())
                 .build();

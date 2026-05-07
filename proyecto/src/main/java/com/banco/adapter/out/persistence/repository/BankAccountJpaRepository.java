@@ -9,4 +9,5 @@ public interface BankAccountJpaRepository extends JpaRepository<BankAccountJpaEn
     Optional<BankAccountJpaEntity> findByAccountNumber(String accountNumber);
     boolean existsByAccountNumber(String accountNumber);
     List<BankAccountJpaEntity> findByOwnerId(String ownerId);
+    void deleteByAccountNumber(String accountNumber);
 }

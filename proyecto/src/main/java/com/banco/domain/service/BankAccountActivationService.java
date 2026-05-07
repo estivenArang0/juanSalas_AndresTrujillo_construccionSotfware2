@@ -40,7 +40,6 @@ public class BankAccountActivationService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cuenta no encontrada: " + accountNumber));
 
-        // activate() ya existe en BankAccount y cambia el status a ACTIVE directamente
         account.activate();
 
         BankAccount saved = bankAccountRepository.save(account);
@@ -58,5 +57,15 @@ public class BankAccountActivationService {
                 ))
                 .build());
 
-        // saved.getBalance().getAmount() y getCurrency() vienen directo del Money
-        // que ya confi
+        return BankAccountResponse.builder()
+                .id(saved.getId())
+                .accountNumber(saved.getAccountNumber())
+                .accountType(saved.getAccountType())
+                .ownerId(saved.getOwnerId())
+                .balance(saved.getBalance() != null ? saved.getBalance().getAmount() : null)
+                .currency(saved.getBalance() != null ? saved.getBalance().getCurrency() : null)
+                .status(saved.getStatus())
+                .openingDate(saved.getOpeningDate())
+                .build();
+    }
+}

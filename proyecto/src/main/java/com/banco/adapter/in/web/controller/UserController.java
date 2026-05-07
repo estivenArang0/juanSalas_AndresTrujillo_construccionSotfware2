@@ -1,4 +1,4 @@
-Ppackage com.banco.adapter.in.web.controller;
+package com.banco.adapter.in.web.controller;
 
 import com.banco.application.dto.request.CreateCompanyClientRequest;
 import com.banco.application.dto.request.CreateNaturalPersonRequest;

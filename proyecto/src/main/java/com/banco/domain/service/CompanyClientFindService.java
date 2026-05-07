@@ -6,7 +6,7 @@ import com.banco.domain.exception.UnauthorizedOperationException;
 import com.banco.domain.model.entity.CompanyClient;
 import com.banco.domain.model.entity.User;
 import com.banco.domain.model.valueobject.UserRole;
-import com.banco.domain.repository.CorporateCustomerRepository;
+import com.banco.domain.repository.CompanyClientRepository;
 import com.banco.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,17 +18,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompanyClientFindService {
 
-    private final CorporateCustomerRepository corporateCustomerRepository;
+    private final CompanyClientRepository companyClientRepository;
     private final UserRepository userRepository;
 
-    // Buscar empresa por NIT
     public CompanyClientResponse findByTaxId(String taxId, Long requestingUserId) {
 
         User requestingUser = userRepository.findById(requestingUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Usuario no encontrado: " + requestingUserId));
 
-        // Clientes empresa solo pueden ver su propia información
         if (requestingUser.hasRole(UserRole.COMPANY_CLIENT)) {
             if (!taxId.equals(requestingUser.getIdentificationNumber())) {
                 throw new UnauthorizedOperationException(
@@ -36,25 +34,18 @@ public class CompanyClientFindService {
             }
         }
 
-        // Clientes persona natural no pueden consultar empresas
         if (requestingUser.hasRole(UserRole.NATURAL_PERSON_CLIENT)) {
             throw new UnauthorizedOperationException(
                     "No tienes permiso para consultar clientes empresa");
         }
 
-        if (!companyClientExists(taxId)) {
-            throw new ResourceNotFoundException(
-                    "No existe una empresa registrada con el NIT: " + taxId);
-        }
-
-        CompanyClient company = corporateCustomerRepository.findByTaxId(taxId)
+        CompanyClient company = companyClientRepository.findByTaxId(taxId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No existe una empresa registrada con el NIT: " + taxId));
 
         return toResponse(company);
     }
 
-    // Listar todas las empresas — solo para empleados internos
     public List<CompanyClientResponse> findAll(Long requestingUserId) {
 
         User requestingUser = userRepository.findById(requestingUserId)
@@ -67,7 +58,7 @@ public class CompanyClientFindService {
                     "Solo empleados comerciales o analistas pueden listar todas las empresas");
         }
 
-        List<CompanyClient> companies = corporateCustomerRepository.findAll();
+        List<CompanyClient> companies = companyClientRepository.findAll();
 
         if (companies.isEmpty()) {
             throw new ResourceNotFoundException(
@@ -79,17 +70,13 @@ public class CompanyClientFindService {
                 .collect(Collectors.toList());
     }
 
-    private boolean companyClientExists(String taxId) {
-        return corporateCustomerRepository.existsByTaxId(taxId);
-    }
-
     private CompanyClientResponse toResponse(CompanyClient company) {
         return CompanyClientResponse.builder()
                 .id(company.getId())
                 .legalName(company.getBusinessName())
                 .taxId(company.getTaxId())
                 .email(company.getEmail())
-                .phone(company.getPhoneNumber())
+                .phone(company.getPhone())
                 .address(company.getAddress())
                 .legalRepresentativeId(company.getLegalRepresentativeId())
                 .build();

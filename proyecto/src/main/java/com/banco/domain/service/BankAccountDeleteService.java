@@ -36,12 +36,6 @@ public class BankAccountDeleteService {
                     "Solo analistas internos pueden eliminar cuentas");
         }
 
-        // Verificar que la cuenta existe
-        if (!accountExists(accountNumber)) {
-            throw new ResourceNotFoundException(
-                    "Cuenta no encontrada: " + accountNumber);
-        }
-
         BankAccount account = bankAccountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cuenta no encontrada: " + accountNumber));
@@ -55,4 +49,22 @@ public class BankAccountDeleteService {
 
         // No se puede eliminar una cuenta activa — debe estar bloqueada o cancelada primero
         if (account.isActive()) {
-            throw new AccountOperationNo
+            throw new AccountOperationNotAllowedException(
+                    "La cuenta " + accountNumber + " debe estar inactiva para ser eliminada");
+        }
+
+        bankAccountRepository.deleteByAccountNumber(accountNumber);
+
+        auditLog.log(AuditLogRequest.builder()
+                .operationType("BANK_ACCOUNT_DELETED")
+                .operationDateTime(LocalDateTime.now())
+                .userId(requestingUserId)
+                .userRole(requestingUser.getRole().name())
+                .affectedProductId(accountNumber)
+                .details(Map.of(
+                        "accountNumber", accountNumber,
+                        "deletedBy", requestingUserId
+                ))
+                .build());
+    }
+}

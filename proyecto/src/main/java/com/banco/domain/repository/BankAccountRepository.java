@@ -9,4 +9,5 @@ public interface BankAccountRepository {
     Optional<BankAccount> findByAccountNumber(String accountNumber);
     List<BankAccount> findByOwnerId(String ownerId);
     boolean existsByAccountNumber(String accountNumber);
+    void deleteByAccountNumber(String accountNumber);
 }
