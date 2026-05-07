@@ -1,12 +1,12 @@
 package com.banco.domain.repository;
 
-import com.banco.domain.model.BankAccount;
+import com.banco.domain.model.entity.BankAccount;
 import java.util.List;
 import java.util.Optional;
 
 public interface BankAccountRepository {
-    BankAccount guardar(BankAccount account);
-    Optional<BankAccount> buscarPorNumero(String accountNumber);
-    List<BankAccount> buscarPorTitular(String holderId);
-    boolean existePorNumero(String accountNumber);
+    BankAccount save(BankAccount account);
+    Optional<BankAccount> findByAccountNumber(String accountNumber);
+    List<BankAccount> findByOwnerId(String ownerId);
+    boolean existsByAccountNumber(String accountNumber);
 }

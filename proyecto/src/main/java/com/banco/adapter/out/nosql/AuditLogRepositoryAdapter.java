@@ -15,24 +15,28 @@ public class AuditLogRepositoryAdapter implements AuditLogRepository {
     private final AuditLogMongoRepository mongo;
 
     @Override
-    public AuditLog registrar(AuditLog r) {
+    public AuditLog save(AuditLog r) {
         AuditLogDocument doc = AuditLogDocument.builder()
-                .auditLogId(r.getIdBitacora()).operationType(r.getTipoOperacion())
-                .operationDateTime(r.getFechaHoraOperacion()).userId(r.getIdUsuario())
-                .userRole(r.getRolUsuario()).affectedProductId(r.getIdProductoAfectado())
-                .detailData(r.getDatosDetalle()).build();
+                .auditLogId(r.getId())
+                .operationType(r.getOperationType())
+                .operationDateTime(r.getOperationDateTime())
+                .userId(r.getUserId())
+                .userRole(r.getUserRole())
+                .affectedProductId(r.getAffectedProductId())
+                .detailData(r.getDetails())
+                .build();
         mongo.save(doc);
         return r;
     }
 
     @Override
     public List<AuditLog> buscarPorProductoAfectado(String idProducto) {
-        return mongo.findByIdProductoAfectado(idProducto).stream().map(this::toDomain).collect(Collectors.toList());
+        return mongo.findByAffectedProductId(idProducto).stream().map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public List<AuditLog> buscarPorUsuario(Long userId) {
-        return mongo.findByIdUsuario(userId).stream().map(this::toDomain).collect(Collectors.toList());
+        return mongo.findByUserId(userId).stream().map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
@@ -42,9 +46,13 @@ public class AuditLogRepositoryAdapter implements AuditLogRepository {
 
     private AuditLog toDomain(AuditLogDocument d) {
         return AuditLog.builder()
-                .auditLogId(d.getIdBitacora()).operationType(d.getTipoOperacion())
-                .operationDateTime(d.getFechaHoraOperacion()).userId(d.getIdUsuario())
-                .userRole(d.getRolUsuario()).affectedProductId(d.getIdProductoAfectado())
-                .detailData(d.getDatosDetalle()).build();
+                .id(d.getAuditLogId())
+                .operationType(d.getOperationType())
+                .operationDateTime(d.getOperationDateTime())
+                .userId(d.getUserId())
+                .userRole(d.getUserRole())
+                .affectedProductId(d.getAffectedProductId())
+                .details(d.getDetailData())
+                .build();
     }
 }

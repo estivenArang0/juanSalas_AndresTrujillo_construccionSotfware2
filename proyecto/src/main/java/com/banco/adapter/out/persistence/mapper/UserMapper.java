@@ -1,31 +1,44 @@
 package com.banco.adapter.out.persistence.mapper;
 
-import com.banco.adapter.out.persistence.entity.UserEntity;
-import com.banco.domain.model.User;
+import com.banco.adapter.out.persistence.entity.UserJpaEntity;
+import com.banco.domain.model.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-    public User toDomain(UserEntity e) {
+    public User toDomain(UserJpaEntity e) {
         if (e == null) return null;
         return User.builder()
-                .userId(e.getIdUsuario()).relatedId(e.getIdRelacionado())
-                .fullName(e.getNombreCompleto()).identificationId(e.getIdIdentificacion())
-                .email(e.getCorreoElectronico()).phone(e.getTelefono())
-                .birthDate(e.getFechaNacimiento()).address(e.getDireccion())
-                .systemRole(e.getRolSistema()).userStatus(e.getEstadoUsuario())
-                .username(e.getUsername()).password(e.getPassword())
-                .associatedCompanyId(e.getIdEmpresaAsociada()).build();
+                .id(e.getId())
+                .relatedEntityId(e.getRelatedEntityId())
+                .fullName(e.getFullName())
+                .identificationNumber(e.getIdentificationNumber())
+                .email(e.getEmail())
+                .phone(e.getPhone())
+                .birthDate(e.getBirthDate())
+                .address(e.getAddress())
+                .role(e.getRole())
+                .status(e.getStatus())
+                .username(e.getUsername())
+                .passwordHash(e.getPasswordHash())
+                .build();
     }
-    public UserEntity toEntity(User d) {
+
+    public UserJpaEntity toEntity(User d) {
         if (d == null) return null;
-        return UserEntity.builder()
-                .userId(d.getIdUsuario()).relatedId(d.getIdRelacionado())
-                .fullName(d.getNombreCompleto()).identificationId(d.getIdIdentificacion())
-                .email(d.getCorreoElectronico()).phone(d.getTelefono())
-                .birthDate(d.getFechaNacimiento()).address(d.getDireccion())
-                .systemRole(d.getRolSistema()).userStatus(d.getEstadoUsuario())
-                .username(d.getUsername()).password(d.getPassword())
-                .associatedCompanyId(d.getIdEmpresaAsociada()).build();
+        return UserJpaEntity.builder()
+                .id(d.getId())
+                .relatedEntityId(d.getRelatedEntityId())
+                .fullName(d.getFullName())
+                .identificationNumber(d.getIdentificationNumber())
+                .email(d.getEmail())
+                .phone(d.getPhone())
+                .birthDate(d.getBirthDate())
+                .address(d.getAddress())
+                .role(d.getRole())
+                .status(d.getStatus())
+                .username(d.getUsername())
+                .passwordHash(d.getPasswordHash())
+                .build();
     }
 }

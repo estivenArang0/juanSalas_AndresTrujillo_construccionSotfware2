@@ -1,6 +1,6 @@
 package com.banco.adapter.in.web.security;
 
-import com.banco.domain.model.User;
+import com.banco.domain.model.entity.User;
 import com.banco.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,11 +15,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = usuarioRepository.buscarPorUsername(username)
+        User u = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User no encontrado: " + username));
         return new org.springframework.security.core.userdetails.User(
-                u.getUsername(), u.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + u.getRolSistema().name()))
+                u.getUsername(), 
+                u.getPasswordHash(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + u.getRole().name()))
         );
     }
 }

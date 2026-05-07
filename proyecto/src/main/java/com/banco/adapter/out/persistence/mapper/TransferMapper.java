@@ -1,27 +1,40 @@
 package com.banco.adapter.out.persistence.mapper;
 
-import com.banco.adapter.out.persistence.entity.TransferEntity;
-import com.banco.domain.model.Transfer;
+import com.banco.adapter.out.persistence.entity.TransferJpaEntity;
+import com.banco.domain.model.entity.Transfer;
+import com.banco.domain.model.valueobject.Money;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TransferMapper {
-    public Transfer toDomain(TransferEntity e) {
+    public Transfer toDomain(TransferJpaEntity e) {
         if (e == null) return null;
         return Transfer.builder()
-                .transferId(e.getIdTransferencia()).sourceAccount(e.getCuentaOrigen())
-                .targetAccount(e.getCuentaDestino()).amount(e.getMonto())
-                .creationDate(e.getFechaCreacion()).approvalDate(e.getFechaAprobacion())
-                .transferStatus(e.getEstadoTransferencia()).creatorUserId(e.getIdUsuarioCreador())
-                .approverUserId(e.getIdUsuarioAprobador()).build();
+                .id(e.getId())
+                .sourceAccountNumber(e.getSourceAccountNumber())
+                .destinationAccountNumber(e.getDestinationAccountNumber())
+                .amount(Money.of(e.getAmount(), e.getCurrency()))
+                .createdAt(e.getCreatedAt())
+                .approvedAt(e.getApprovedAt())
+                .status(e.getStatus())
+                .creatorUserId(e.getCreatorUserId())
+                .approverUserId(e.getApproverUserId())
+                .build();
     }
-    public TransferEntity toEntity(Transfer d) {
+
+    public TransferJpaEntity toEntity(Transfer d) {
         if (d == null) return null;
-        return TransferEntity.builder()
-                .transferId(d.getIdTransferencia()).sourceAccount(d.getCuentaOrigen())
-                .targetAccount(d.getCuentaDestino()).amount(d.getMonto())
-                .creationDate(d.getFechaCreacion()).approvalDate(d.getFechaAprobacion())
-                .transferStatus(d.getEstadoTransferencia()).creatorUserId(d.getIdUsuarioCreador())
-                .approverUserId(d.getIdUsuarioAprobador()).build();
+        return TransferJpaEntity.builder()
+                .id(d.getId())
+                .sourceAccountNumber(d.getSourceAccountNumber())
+                .destinationAccountNumber(d.getDestinationAccountNumber())
+                .amount(d.getAmount() != null ? d.getAmount().getAmount() : null)
+                .currency(d.getAmount() != null ? d.getAmount().getCurrency() : null)
+                .createdAt(d.getCreatedAt())
+                .approvedAt(d.getApprovedAt())
+                .status(d.getStatus())
+                .creatorUserId(d.getCreatorUserId())
+                .approverUserId(d.getApproverUserId())
+                .build();
     }
 }

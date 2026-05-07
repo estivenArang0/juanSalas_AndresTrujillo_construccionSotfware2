@@ -1,7 +1,7 @@
 package com.banco.config;
 
-import com.banco.domain.model.TransferStatus;
-import com.banco.domain.model.Transfer;
+import com.banco.domain.model.valueobject.TransferStatus;
+import com.banco.domain.model.entity.Transfer;
 import com.banco.domain.repository.TransferRepository;
 import com.banco.domain.service.AuditLogService;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +27,13 @@ public class TransferExpirationScheduler {
     @Scheduled(fixedDelay = 60000) // cada minuto
     @Transactional
     public void vencerTransferenciasExpiradas() {
-        List<Transfer> pendientes = transferRepository.buscarPorEstado(TransferStatus.PENDING_APPROVAL);
+        List<Transfer> pendientes = transferRepository.findByStatus(TransferStatus.PENDING_APPROVAL);
         for (Transfer t : pendientes) {
             if (t.isExpired(minutosVencimiento)) {
                 t.expire();
-                transferRepository.guardar(t);
+                transferRepository.save(t);
                 bitacoraService.registrarTransferenciaVencida(t);
-                log.info("Transfer {} marcada como EXPIRED", t.getIdTransferencia());
+                log.info("Transfer {} marcada como EXPIRED", t.getId());
             }
         }
     }

@@ -1,15 +1,15 @@
 package com.banco.domain.repository;
 
-import com.banco.domain.model.User;
+import com.banco.domain.model.entity.User;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    User guardar(User usuario);
-    Optional<User> buscarPorId(Long id);
-    Optional<User> buscarPorUsername(String username);
-    Optional<User> buscarPorIdIdentificacion(String identificationId);
-    List<User> listarTodos();
-    boolean existePorIdIdentificacion(String identificationId);
-    boolean existePorUsername(String username);
+    User save(User usuario);
+    Optional<User> findById(Long id);
+    Optional<User> findByUsername(String username);
+    Optional<User> findByIdentificationNumber(String identificationId);
+    List<User> findAll();
+    boolean existsByIdentificationNumber(String identificationId);
+    boolean existsByUsername(String username);
 }

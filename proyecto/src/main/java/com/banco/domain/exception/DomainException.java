@@ -1,4 +1,4 @@
-package com.bank.app.domain.exception;
+package com.banco.domain.exception;
 public abstract class DomainException extends RuntimeException {
     public DomainException(String message) { super(message); }
 }

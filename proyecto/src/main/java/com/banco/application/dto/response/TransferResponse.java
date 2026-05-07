@@ -1,10 +1,12 @@
-package com.bank.app.application.dto.response;
-import com.bank.app.domain.model.valueobject.TransferStatus;
+package com.banco.application.dto.response;
+import com.banco.domain.model.valueobject.TransferStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-@Data @Builder
+@Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class TransferResponse {
     private Long id;
     private String sourceAccountNumber;
@@ -17,3 +19,4 @@ public class TransferResponse {
     private Long creatorUserId;
     private Long approverUserId;
 }
+

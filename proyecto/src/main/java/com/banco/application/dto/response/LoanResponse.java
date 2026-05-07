@@ -1,10 +1,12 @@
-package com.bank.app.application.dto.response;
-import com.bank.app.domain.model.valueobject.LoanStatus;
+package com.banco.application.dto.response;
+import com.banco.domain.model.valueobject.LoanStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-@Data @Builder
+@Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class LoanResponse {
     private Long id;
     private String loanType;
@@ -19,3 +21,4 @@ public class LoanResponse {
     private LocalDate disbursementDate;
     private String disbursementAccountNumber;
 }
+

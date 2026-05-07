@@ -1,9 +1,9 @@
-package com.bank.app.adapter.in.web.controller;
+Ppackage com.banco.adapter.in.web.controller;
 
-import com.bank.app.application.dto.request.CreateCompanyClientRequest;
-import com.bank.app.application.dto.request.CreateNaturalPersonRequest;
-import com.bank.app.application.dto.response.*;
-import com.bank.app.application.port.input.UserInputPort;
+import com.banco.application.dto.request.CreateCompanyClientRequest;
+import com.banco.application.dto.request.CreateNaturalPersonRequest;
+import com.banco.application.dto.response.*;
+import com.banco.application.port.input.UserInputPort;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

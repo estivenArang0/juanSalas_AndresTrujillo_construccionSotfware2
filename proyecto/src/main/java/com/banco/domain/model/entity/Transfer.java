@@ -1,23 +1,50 @@
-package com.bank.app.domain.model.entity;
+package com.banco.domain.model.entity;
 
-import com.bank.app.domain.exception.InvalidTransferStateException;
-import com.bank.app.domain.model.valueobject.Money;
-import com.bank.app.domain.model.valueobject.TransferStatus;
+import com.banco.domain.exception.InvalidTransferStateException;
+import com.banco.domain.model.valueobject.Money;
+import com.banco.domain.model.valueobject.TransferStatus;
 import lombok.*;
 import java.time.LocalDateTime;
 
-@Getter @Builder @AllArgsConstructor @NoArgsConstructor
+@Getter @AllArgsConstructor @NoArgsConstructor
 public class Transfer {
+    public static TransferBuilder builder() { return new TransferBuilder(); }
+    public static class TransferBuilder {
+        private Transfer t = new Transfer();
+        public TransferBuilder id(Long id) { t.id = id; return this; }
+        public TransferBuilder sourceAccountNumber(String s) { t.sourceAccountNumber = s; return this; }
+        public TransferBuilder destinationAccountNumber(String d) { t.destinationAccountNumber = d; return this; }
+        public TransferBuilder amount(Money a) { t.amount = a; return this; }
+        public TransferBuilder createdAt(LocalDateTime c) { t.createdAt = c; return this; }
+        public TransferBuilder approvedAt(LocalDateTime a) { t.approvedAt = a; return this; }
+        public TransferBuilder expiredAt(LocalDateTime e) { t.expiredAt = e; return this; }
+        public TransferBuilder status(TransferStatus s) { t.status = s; return this; }
+        public TransferBuilder creatorUserId(Long c) { t.creatorUserId = c; return this; }
+        public TransferBuilder approverUserId(Long a) { t.approverUserId = a; return this; }
+        public Transfer build() { return t; }
+    }
+
     private Long id;
     private String sourceAccountNumber;
     private String destinationAccountNumber;
     private Money amount;
     private LocalDateTime createdAt;
     private LocalDateTime approvedAt;
-    private LocalDateTime expiredAt;        // ✅ FIX 3: fecha de vencimiento
+    private LocalDateTime expiredAt;
     private TransferStatus status;
     private Long creatorUserId;
     private Long approverUserId;
+
+    public Long getId() { return id; }
+    public String getSourceAccountNumber() { return sourceAccountNumber; }
+    public String getDestinationAccountNumber() { return destinationAccountNumber; }
+    public Money getAmount() { return amount; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getApprovedAt() { return approvedAt; }
+    public LocalDateTime getExpiredAt() { return expiredAt; }
+    public TransferStatus getStatus() { return status; }
+    public Long getCreatorUserId() { return creatorUserId; }
+    public Long getApproverUserId() { return approverUserId; }
 
     // ✅ FIX 2: factory method para transferencia que requiere aprobación
     public static Transfer createPendingApproval(String sourceAccount, String destinationAccount,

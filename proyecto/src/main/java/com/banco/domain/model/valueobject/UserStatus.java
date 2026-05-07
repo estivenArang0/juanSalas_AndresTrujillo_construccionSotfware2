@@ -1,2 +1,2 @@
-package com.bank.app.domain.model.valueobject;
+package com.banco.domain.model.valueobject;
 public enum UserStatus { ACTIVE, INACTIVE, BLOCKED }

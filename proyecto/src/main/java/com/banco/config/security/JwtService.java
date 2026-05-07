@@ -1,15 +1,16 @@
-package com.banco.adapter.in.web.security;
+package com.banco.config.security;
 
+import com.banco.domain.model.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-@Component
-public class JwtUtil {
+@Service
+public class JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -19,6 +20,10 @@ public class JwtUtil {
 
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    public String generateToken(User user) {
+        return generateToken(user.getUsername(), user.getRole().name(), user.getId());
     }
 
     public String generateToken(String username, String role, Long userId) {
@@ -36,11 +41,11 @@ public class JwtUtil {
         return getClaims(token).getSubject();
     }
 
-    public String extractRol(String token) {
+    public String extractRole(String token) {
         return getClaims(token).get("role", String.class);
     }
 
-    public Long extractIdUsuario(String token) {
+    public Long extractUserId(String token) {
         return getClaims(token).get("userId", Long.class);
     }
 

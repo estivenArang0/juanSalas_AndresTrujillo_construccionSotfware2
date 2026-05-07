@@ -1,11 +1,9 @@
-package com.bank.app.domain.model.entity;
+package com.banco.domain.model.entity;
 
-import com.bank.app.domain.model.valueobject.ClientStatus;
-import com.bank.app.domain.model.valueobject.SystemRole;
-import lombok.*;
+import com.banco.domain.model.valueobject.UserStatus;
+import com.banco.domain.model.valueobject.UserRole;
 import java.time.LocalDate;
 
-@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class NaturalPersonClient {
     private Long id;
     private String fullName;
@@ -14,61 +12,49 @@ public class NaturalPersonClient {
     private String phone;
     private LocalDate birthDate;
     private String address;
+    private UserStatus status;
+    private final UserRole role = UserRole.NATURAL_PERSON_CLIENT;
 
-    // ✅ FIX 3: campos requeridos por el documento para todos los clientes
-    private ClientStatus status;
-    private final SystemRole role = SystemRole.CLIENT_NATURAL_PERSON;
+    public NaturalPersonClient() {}
 
-    // ✅ FIX 4: factory method que garantiza validación siempre
-    public static NaturalPersonClient create(String fullName, String identificationNumber,
-                                              String email, String phone,
-                                              LocalDate birthDate, String address) {
-        validateRequired(fullName, "Full name");
-        validateRequired(identificationNumber, "Identification number");
-        validateRequired(address, "Address");
-        validateEmail(email);
-        validatePhone(phone);
-        // ✅ FIX 1: validación de mayoría de edad
-        validateAdult(birthDate);
-
-        return NaturalPersonClient.builder()
-                .fullName(fullName)
-                .identificationNumber(identificationNumber)
-                .email(email)
-                .phone(phone)
-                .birthDate(birthDate)
-                .address(address)
-                .status(ClientStatus.ACTIVE)
-                .build();
+    public NaturalPersonClient(Long id, String fullName, String identificationNumber, String email, String phone, LocalDate birthDate, String address, UserStatus status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.identificationNumber = identificationNumber;
+        this.email = email;
+        this.phone = phone;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.status = status;
     }
 
-    // ✅ FIX 2: validación de formato de email
-    private static void validateEmail(String email) {
-        if (email == null || !email.contains("@") || !email.contains("."))
-            throw new IllegalArgumentException("Invalid email format: " + email);
+    public static NaturalPersonClientBuilder builder() { return new NaturalPersonClientBuilder(); }
+
+    public static class NaturalPersonClientBuilder {
+        private NaturalPersonClient c = new NaturalPersonClient();
+        public NaturalPersonClientBuilder id(Long id) { c.id = id; return this; }
+        public NaturalPersonClientBuilder fullName(String name) { c.fullName = name; return this; }
+        public NaturalPersonClientBuilder identificationNumber(String id) { c.identificationNumber = id; return this; }
+        public NaturalPersonClientBuilder email(String email) { c.email = email; return this; }
+        public NaturalPersonClientBuilder phone(String phone) { c.phone = phone; return this; }
+        public NaturalPersonClientBuilder birthDate(LocalDate date) { c.birthDate = date; return this; }
+        public NaturalPersonClientBuilder address(String addr) { c.address = addr; return this; }
+        public NaturalPersonClientBuilder status(UserStatus status) { c.status = status; return this; }
+        public NaturalPersonClient build() { return c; }
     }
 
-    private static void validatePhone(String phone) {
-        if (phone == null || phone.length() < 7 || phone.length() > 15)
-            throw new IllegalArgumentException("Phone must be between 7 and 15 digits");
-    }
+    public Long getId() { return id; }
+    public String getFullName() { return fullName; }
+    public String getIdentificationNumber() { return identificationNumber; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public String getAddress() { return address; }
+    public UserStatus getStatus() { return status; }
+    public UserRole getRole() { return role; }
 
-    // ✅ FIX 1: debe tener al menos 18 años
-    private static void validateAdult(LocalDate birthDate) {
-        if (birthDate == null)
-            throw new IllegalArgumentException("Birth date is required");
-        if (birthDate.plusYears(18).isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("Client must be at least 18 years old");
+    public void validateRequiredFields() {
+        if (fullName == null || fullName.isBlank()) throw new IllegalArgumentException("Full name is required");
+        if (identificationNumber == null || identificationNumber.isBlank()) throw new IllegalArgumentException("Identification number is required");
     }
-
-    private static void validateRequired(String value, String fieldName) {
-        if (value == null || value.isBlank())
-            throw new IllegalArgumentException(fieldName + " is required");
-    }
-
-    // ✅ FIX 5: solo métodos controlados modifican el estado
-    public boolean isActive()  { return ClientStatus.ACTIVE.equals(this.status); }
-    public void block()        { this.status = ClientStatus.BLOCKED; }
-    public void deactivate()   { this.status = ClientStatus.INACTIVE; }
-    public void activate()     { this.status = ClientStatus.ACTIVE; }
 }

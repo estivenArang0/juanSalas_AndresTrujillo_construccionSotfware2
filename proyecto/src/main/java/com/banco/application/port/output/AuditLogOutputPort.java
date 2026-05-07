@@ -1,5 +1,5 @@
-package com.bank.app.application.port.output;
-import com.bank.app.application.dto.request.AuditLogRequest;
+package com.banco.application.port.output;
+import com.banco.application.dto.request.AuditLogRequest;
 public interface AuditLogOutputPort {
     void log(AuditLogRequest logRequest);
 }

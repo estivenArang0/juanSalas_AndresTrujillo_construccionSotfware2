@@ -1,15 +1,33 @@
-package com.bank.app.domain.model.entity;
+package com.banco.domain.model.entity;
 
-import com.bank.app.domain.exception.UserNotActiveException;
-import com.bank.app.domain.model.valueobject.UserRole;
-import com.bank.app.domain.model.valueobject.UserStatus;
+import com.banco.domain.exception.UserNotActiveException;
+import com.banco.domain.model.valueobject.UserRole;
+import com.banco.domain.model.valueobject.UserStatus;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.Period;
 
 // ✅ FIX 1: se elimina @Setter global
-@Getter @Builder @AllArgsConstructor @NoArgsConstructor
+@Getter @AllArgsConstructor @NoArgsConstructor
 public class User {
+    public static UserBuilder builder() { return new UserBuilder(); }
+    public static class UserBuilder {
+        private User user = new User();
+        public UserBuilder id(Long id) { user.id = id; return this; }
+        public UserBuilder relatedEntityId(String id) { user.relatedEntityId = id; return this; }
+        public UserBuilder fullName(String name) { user.fullName = name; return this; }
+        public UserBuilder identificationNumber(String id) { user.identificationNumber = id; return this; }
+        public UserBuilder email(String email) { user.email = email; return this; }
+        public UserBuilder phone(String phone) { user.phone = phone; return this; }
+        public UserBuilder birthDate(LocalDate date) { user.birthDate = date; return this; }
+        public UserBuilder address(String addr) { user.address = addr; return this; }
+        public UserBuilder role(UserRole role) { user.role = role; return this; }
+        public UserBuilder status(UserStatus status) { user.status = status; return this; }
+        public UserBuilder username(String uname) { user.username = uname; return this; }
+        public UserBuilder passwordHash(String hash) { user.passwordHash = hash; return this; }
+        public UserBuilder associatedCompanyId(String id) { user.associatedCompanyId = id; return this; }
+        public User build() { return user; }
+    }
     private Long id;
     private String relatedEntityId;
     private String fullName;
@@ -24,6 +42,34 @@ public class User {
 
     // ✅ FIX 4: passwordHash no expuesto con @Getter — se accede solo por método controlado
     private String passwordHash;
+    private String associatedCompanyId;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getRelatedEntityId() { return relatedEntityId; }
+    public void setRelatedEntityId(String relatedEntityId) { this.relatedEntityId = relatedEntityId; }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getIdentificationNumber() { return identificationNumber; }
+    public void setIdentificationNumber(String identificationNumber) { this.identificationNumber = identificationNumber; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    public UserRole getRole() { return role; }
+    public void setRole(UserRole role) { this.role = role; }
+    public UserStatus getStatus() { return status; }
+    public void setStatus(UserStatus status) { this.status = status; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public String getAssociatedCompanyId() { return associatedCompanyId; }
+    public void setAssociatedCompanyId(String associatedCompanyId) { this.associatedCompanyId = associatedCompanyId; }
 
     // ✅ FIX 5: factory method que garantiza validación siempre
     public static User create(String relatedEntityId, String fullName, String identificationNumber,

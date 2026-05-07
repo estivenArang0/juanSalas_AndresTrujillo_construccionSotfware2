@@ -1,14 +1,14 @@
 package com.banco.domain.repository;
 
-import com.banco.domain.model.TransferStatus;
-import com.banco.domain.model.Transfer;
+import com.banco.domain.model.valueobject.TransferStatus;
+import com.banco.domain.model.entity.Transfer;
 import java.util.List;
 import java.util.Optional;
 
 public interface TransferRepository {
-    Transfer guardar(Transfer transfer);
-    Optional<Transfer> buscarPorId(Long id);
-    List<Transfer> buscarPorCuentaOrigen(String sourceAccount);
-    List<Transfer> buscarPorEstado(TransferStatus status);
-    List<Transfer> buscarPorCuentaOrigenODestino(String sourceAccount, String targetAccount);
+    Transfer save(Transfer transfer);
+    Optional<Transfer> findById(Long id);
+    List<Transfer> findBySourceAccountNumber(String sourceAccountNumber);
+    List<Transfer> findByStatus(TransferStatus status);
+    List<Transfer> findBySourceAccountNumberOrDestinationAccountNumber(String sourceAccount, String targetAccount);
 }

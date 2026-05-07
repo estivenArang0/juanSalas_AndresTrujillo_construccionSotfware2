@@ -1,63 +1,71 @@
-package com.bank.app.domain.model.entity;
+package com.banco.domain.model.entity;
 
-import com.bank.app.domain.model.valueobject.ClientStatus;
-import com.bank.app.domain.model.valueobject.SystemRole;
-import lombok.*;
+import com.banco.domain.model.valueobject.UserStatus;
+import com.banco.domain.model.valueobject.UserRole;
+import java.time.LocalDate;
 
-@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class CompanyClient {
     private Long id;
     private String businessName;
     private String taxId;
     private String email;
-    private String phoneNumber;
+    private String phone;
+    private LocalDate foundationDate;
     private String address;
+    private String industry;
     private String legalRepresentativeId;
+    private UserStatus status;
+    private final UserRole role = UserRole.COMPANY_CLIENT;
 
-    // ✅ FIX 1: campos de estado y rol requeridos por el documento
-    private ClientStatus status;
-    private final SystemRole role = SystemRole.CLIENT_COMPANY;
+    public CompanyClient() {}
 
-    // ✅ FIX 2: validaciones de formato según reglas de negocio
-    public static CompanyClient create(String businessName, String taxId, String email,
-                                       String phoneNumber, String address,
-                                       String legalRepresentativeId) {
-        validateEmail(email);
-        validatePhone(phoneNumber);
-        validateRequired(businessName, "Business name");
-        validateRequired(taxId, "Tax ID");
-        validateRequired(address, "Address");
-        validateRequired(legalRepresentativeId, "Legal representative ID");
-
-        return CompanyClient.builder()
-                .businessName(businessName)
-                .taxId(taxId)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .address(address)
-                .legalRepresentativeId(legalRepresentativeId)
-                .status(ClientStatus.ACTIVE)
-                .build();
+    public CompanyClient(Long id, String businessName, String taxId, String email, String phone, LocalDate foundationDate, String address, String industry, String legalRepresentativeId, UserStatus status) {
+        this.id = id;
+        this.businessName = businessName;
+        this.taxId = taxId;
+        this.email = email;
+        this.phone = phone;
+        this.foundationDate = foundationDate;
+        this.address = address;
+        this.industry = industry;
+        this.legalRepresentativeId = legalRepresentativeId;
+        this.status = status;
     }
 
-    private static void validateEmail(String email) {
-        if (email == null || !email.contains("@") || !email.contains("."))
-            throw new IllegalArgumentException("Invalid email format: " + email);
+    public static CompanyClientBuilder builder() { return new CompanyClientBuilder(); }
+
+    public static class CompanyClientBuilder {
+        private CompanyClient c = new CompanyClient();
+        public CompanyClientBuilder id(Long id) { c.id = id; return this; }
+        public CompanyClientBuilder businessName(String name) { c.businessName = name; return this; }
+        public CompanyClientBuilder legalName(String name) { c.businessName = name; return this; } // Alias for backward compat
+        public CompanyClientBuilder taxId(String id) { c.taxId = id; return this; }
+        public CompanyClientBuilder email(String email) { c.email = email; return this; }
+        public CompanyClientBuilder phone(String phone) { c.phone = phone; return this; }
+        public CompanyClientBuilder foundationDate(LocalDate date) { c.foundationDate = date; return this; }
+        public CompanyClientBuilder address(String addr) { c.address = addr; return this; }
+        public CompanyClientBuilder industry(String ind) { c.industry = ind; return this; }
+        public CompanyClientBuilder legalRepresentativeId(String id) { c.legalRepresentativeId = id; return this; }
+        public CompanyClientBuilder status(UserStatus status) { c.status = status; return this; }
+        public CompanyClient build() { return c; }
     }
 
-    private static void validatePhone(String phone) {
-        if (phone == null || phone.length() < 7 || phone.length() > 15)
-            throw new IllegalArgumentException("Phone must be between 7 and 15 digits");
-    }
+    public Long getId() { return id; }
+    public String getBusinessName() { return businessName; }
+    public String getLegalName() { return businessName; } // Alias
+    public String getTaxId() { return taxId; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+    public LocalDate getFoundationDate() { return foundationDate; }
+    public String getAddress() { return address; }
+    public String getIndustry() { return industry; }
+    public String getLegalRepresentativeId() { return legalRepresentativeId; }
+    public UserStatus getStatus() { return status; }
+    public UserRole getRole() { return role; }
 
-    private static void validateRequired(String value, String fieldName) {
-        if (value == null || value.isBlank())
-            throw new IllegalArgumentException(fieldName + " is required");
+    public void validateRequiredFields() {
+        if (businessName == null || businessName.isBlank()) throw new IllegalArgumentException("Business name is required");
+        if (taxId == null || taxId.isBlank()) throw new IllegalArgumentException("Tax ID is required");
+        if (legalRepresentativeId == null || legalRepresentativeId.isBlank()) throw new IllegalArgumentException("Legal representative ID is required");
     }
-
-    // ✅ FIX 3: solo métodos controlados modifican el estado
-    public boolean isActive() { return ClientStatus.ACTIVE.equals(this.status); }
-    public void block()       { this.status = ClientStatus.BLOCKED; }
-    public void deactivate()  { this.status = ClientStatus.INACTIVE; }
-    public void activate()    { this.status = ClientStatus.ACTIVE; }
 }

@@ -1,5 +1,6 @@
 package com.banco.adapter.in.web.security;
 
+import com.banco.config.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -24,10 +25,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String header = req.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.extractUsername(token);
-                String role = jwtUtil.extractRol(token);
-                Long userId = jwtUtil.extractIdUsuario(token);
+            if (jwtService.validateToken(token)) {
+                String username = jwtService.extractUsername(token);
+                String role = jwtService.extractRole(token);
+                Long userId = jwtService.extractUserId(token);
                 var auth = new UsernamePasswordAuthenticationToken(
                         new UserPrincipal(username, role, userId),
                         null,

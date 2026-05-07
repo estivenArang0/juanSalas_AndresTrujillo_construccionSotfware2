@@ -1,4 +1,4 @@
-package com.bank.app.domain.model.valueobject;
+package com.banco.domain.model.valueobject;
 public enum UserRole {
     NATURAL_PERSON_CLIENT,
     COMPANY_CLIENT,

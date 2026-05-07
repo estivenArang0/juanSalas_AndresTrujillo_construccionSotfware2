@@ -1,9 +1,9 @@
-package com.bank.app.adapter.in.web.controller;
+package com.banco.adapter.in.web.controller;
 
-import com.bank.app.application.dto.request.CreateBankAccountRequest;
-import com.bank.app.application.dto.response.ApiResponse;
-import com.bank.app.application.dto.response.BankAccountResponse;
-import com.bank.app.application.port.input.BankAccountInputPort;
+import com.banco.application.dto.request.CreateBankAccountRequest;
+import com.banco.application.dto.response.ApiResponse;
+import com.banco.application.dto.response.BankAccountResponse;
+import com.banco.application.port.input.BankAccountInputPort;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

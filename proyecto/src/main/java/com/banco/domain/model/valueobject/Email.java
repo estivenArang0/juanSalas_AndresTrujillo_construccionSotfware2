@@ -1,4 +1,4 @@
-package com.bank.app.domain.model.valueobject;
+package com.banco.domain.model.valueobject;
 
 import java.util.Objects;
 import java.util.regex.Pattern;

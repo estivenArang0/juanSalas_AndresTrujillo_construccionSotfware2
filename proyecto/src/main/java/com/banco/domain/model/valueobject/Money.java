@@ -1,6 +1,6 @@
-package com.bank.app.domain.model.valueobject;
+package com.banco.domain.model.valueobject;
 
-import com.bank.app.domain.exception.InvalidAmountException;
+import com.banco.domain.exception.InvalidAmountException;
 import java.math.BigDecimal;
 import java.util.Objects;
 

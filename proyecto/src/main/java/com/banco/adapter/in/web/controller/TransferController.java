@@ -1,10 +1,10 @@
-package com.bank.app.adapter.in.web.controller;
+package com.banco.adapter.in.web.controller;
 
-import com.bank.app.application.dto.request.CreateTransferRequest;
-import com.bank.app.application.dto.response.ApiResponse;
-import com.bank.app.application.dto.response.TransferResponse;
-import com.bank.app.application.port.input.TransferInputPort;
-import com.bank.app.config.security.JwtService;
+import com.banco.application.dto.request.CreateTransferRequest;
+import com.banco.application.dto.response.ApiResponse;
+import com.banco.application.dto.response.TransferResponse;
+import com.banco.application.port.input.TransferInputPort;
+import com.banco.config.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

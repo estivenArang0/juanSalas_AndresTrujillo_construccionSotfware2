@@ -1,14 +1,12 @@
-package com.bank.app.domain.model.entity;
+package com.banco.domain.model.entity;
 
-import com.bank.app.domain.exception.AccountOperationNotAllowedException;
-import com.bank.app.domain.exception.InsufficientFundsException;
-import com.bank.app.domain.model.valueobject.AccountStatus;
-import com.bank.app.domain.model.valueobject.AccountType;
-import com.bank.app.domain.model.valueobject.Money;
-import lombok.*;
+import com.banco.domain.exception.AccountOperationNotAllowedException;
+import com.banco.domain.exception.InsufficientFundsException;
+import com.banco.domain.model.valueobject.AccountStatus;
+import com.banco.domain.model.valueobject.AccountType;
+import com.banco.domain.model.valueobject.Money;
 import java.time.LocalDate;
 
-@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class BankAccount {
     private Long id;
     private String accountNumber;
@@ -18,6 +16,43 @@ public class BankAccount {
     private AccountStatus status;
     private LocalDate openingDate;
 
+    public BankAccount() {}
+
+    public BankAccount(Long id, String accountNumber, AccountType accountType, String ownerId, Money balance, AccountStatus status, LocalDate openingDate) {
+        this.id = id;
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.ownerId = ownerId;
+        this.balance = balance;
+        this.status = status;
+        this.openingDate = openingDate;
+    }
+
+    public static BankAccountBuilder builder() { return new BankAccountBuilder(); }
+
+    public static class BankAccountBuilder {
+        private BankAccount a = new BankAccount();
+        public BankAccountBuilder id(Long id) { a.id = id; return this; }
+        public BankAccountBuilder accountNumber(String num) { a.accountNumber = num; return this; }
+        public BankAccountBuilder accountType(AccountType type) { a.accountType = type; return this; }
+        public BankAccountBuilder ownerId(String id) { a.ownerId = id; return this; }
+        public BankAccountBuilder holderId(String id) { a.ownerId = id; return this; } // Alias
+        public BankAccountBuilder balance(Money m) { a.balance = m; return this; }
+        public BankAccountBuilder currentBalance(java.math.BigDecimal b) { a.balance = Money.of(b, "COP"); return this; } // Alias
+        public BankAccountBuilder status(AccountStatus s) { a.status = s; return this; }
+        public BankAccountBuilder accountStatus(AccountStatus s) { a.status = s; return this; } // Alias
+        public BankAccountBuilder openingDate(LocalDate date) { a.openingDate = date; return this; }
+        public BankAccount build() { return a; }
+    }
+
+    public Long getId() { return id; }
+    public String getAccountNumber() { return accountNumber; }
+    public AccountType getAccountType() { return accountType; }
+    public String getOwnerId() { return ownerId; }
+    public Money getBalance() { return balance; }
+    public AccountStatus getStatus() { return status; }
+    public LocalDate getOpeningDate() { return openingDate; }
+
     public void validateIsOperational() {
         if (this.status == AccountStatus.BLOCKED || this.status == AccountStatus.CANCELLED)
             throw new AccountOperationNotAllowedException(
@@ -25,7 +60,6 @@ public class BankAccount {
     }
 
     public void credit(Money amount) {
-        // ✅ FIX 1: validar que la cuenta esté operacional antes de acreditar
         validateIsOperational();
         if (!amount.isPositive()) throw new IllegalArgumentException("Credit amount must be positive");
         if (this.balance == null) {
@@ -50,15 +84,12 @@ public class BankAccount {
         return this.balance != null ? this.balance.getCurrency() : null;
     }
 
-    // ✅ FIX 2: null-check en balance para evitar NullPointerException
     public boolean hasSufficientFunds(Money amount) {
         return this.balance != null && this.balance.isGreaterThanOrEqual(amount);
     }
 
     public boolean isActive() { return AccountStatus.ACTIVE.equals(this.status); }
 
-    // ✅ FIX 3: métodos de negocio como única vía para cambiar estado y balance
-    // Se eliminó @Setter global — los campos solo se modifican por métodos controlados
     public void block()    { this.status = AccountStatus.BLOCKED; }
     public void cancel()   { this.status = AccountStatus.CANCELLED; }
     public void activate() { this.status = AccountStatus.ACTIVE; }

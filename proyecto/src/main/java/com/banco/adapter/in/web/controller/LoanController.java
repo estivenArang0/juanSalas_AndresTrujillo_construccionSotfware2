@@ -1,12 +1,12 @@
-package com.bank.app.adapter.in.web.controller;
+package com.banco.adapter.in.web.controller;
 
-import com.bank.app.application.dto.request.ApproveLoanRequest;
-import com.bank.app.application.dto.request.CreateLoanRequest;
-import com.bank.app.application.dto.request.DisburseLoanRequest;
-import com.bank.app.application.dto.response.ApiResponse;
-import com.bank.app.application.dto.response.LoanResponse;
-import com.bank.app.application.port.input.LoanInputPort;
-import com.bank.app.config.security.JwtService;
+import com.banco.application.dto.request.ApproveLoanRequest;
+import com.banco.application.dto.request.CreateLoanRequest;
+import com.banco.application.dto.request.DisburseLoanRequest;
+import com.banco.application.dto.response.ApiResponse;
+import com.banco.application.dto.response.LoanResponse;
+import com.banco.application.port.input.LoanInputPort;
+import com.banco.config.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

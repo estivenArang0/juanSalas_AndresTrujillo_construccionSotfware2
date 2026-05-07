@@ -1,4 +1,4 @@
-package com.bank.app.application.dto.request;
+package com.banco.application.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 @Data

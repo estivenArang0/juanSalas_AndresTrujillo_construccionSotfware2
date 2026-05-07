@@ -1,25 +1,36 @@
 package com.banco.adapter.out.persistence.mapper;
 
-import com.banco.adapter.out.persistence.entity.BankAccountEntity;
-import com.banco.domain.model.BankAccount;
+import com.banco.adapter.out.persistence.entity.BankAccountJpaEntity;
+import com.banco.domain.model.entity.BankAccount;
+import com.banco.domain.model.valueobject.Money;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BankAccountMapper {
-    public BankAccount toDomain(BankAccountEntity e) {
+    public BankAccount toDomain(BankAccountJpaEntity e) {
         if (e == null) return null;
         return BankAccount.builder()
-                .accountNumber(e.getNumeroCuenta()).accountType(e.getTipoCuenta())
-                .holderId(e.getIdTitular()).currentBalance(e.getSaldoActual())
-                .currency(e.getMoneda()).accountStatus(e.getEstadoCuenta())
-                .openingDate(e.getFechaApertura()).build();
+                .id(e.getId())
+                .accountNumber(e.getAccountNumber())
+                .accountType(e.getAccountType())
+                .ownerId(e.getOwnerId())
+                .balance(Money.of(e.getBalance(), e.getCurrency()))
+                .status(e.getStatus())
+                .openingDate(e.getOpeningDate())
+                .build();
     }
-    public BankAccountEntity toEntity(BankAccount d) {
+
+    public BankAccountJpaEntity toEntity(BankAccount d) {
         if (d == null) return null;
-        return BankAccountEntity.builder()
-                .accountNumber(d.getNumeroCuenta()).accountType(d.getTipoCuenta())
-                .holderId(d.getIdTitular()).currentBalance(d.getSaldoActual())
-                .currency(d.getMoneda()).accountStatus(d.getEstadoCuenta())
-                .openingDate(d.getFechaApertura()).build();
+        return BankAccountJpaEntity.builder()
+                .id(d.getId())
+                .accountNumber(d.getAccountNumber())
+                .accountType(d.getAccountType())
+                .ownerId(d.getOwnerId())
+                .balance(d.getBalance() != null ? d.getBalance().getAmount() : null)
+                .currency(d.getBalance() != null ? d.getBalance().getCurrency() : null)
+                .status(d.getStatus())
+                .openingDate(d.getOpeningDate())
+                .build();
     }
 }
