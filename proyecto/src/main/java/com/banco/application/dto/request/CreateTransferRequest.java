@@ -8,4 +8,5 @@ public class CreateTransferRequest {
     @NotBlank private String destinationAccountNumber;
     @NotNull @Positive private BigDecimal amount;
     @NotBlank private String currency;
+    private String description;
 }

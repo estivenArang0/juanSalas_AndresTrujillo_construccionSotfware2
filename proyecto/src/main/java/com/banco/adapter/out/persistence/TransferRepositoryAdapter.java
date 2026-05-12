@@ -41,4 +41,14 @@ public class TransferRepositoryAdapter implements TransferRepository {
     public List<Transfer> findBySourceAccountNumberOrDestinationAccountNumber(String sourceAccount, String targetAccount) {
         return jpa.findBySourceAccountNumberOrDestinationAccountNumber(sourceAccount, targetAccount).stream().map(mapper::toDomain).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Transfer> findAllByStatus(TransferStatus status) {
+        return jpa.findByStatus(status).stream().map(mapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Transfer> findByAccountNumber(String accountNumber) {
+        return jpa.findBySourceAccountNumberOrDestinationAccountNumber(accountNumber, accountNumber).stream().map(mapper::toDomain).collect(Collectors.toList());
+    }
 }

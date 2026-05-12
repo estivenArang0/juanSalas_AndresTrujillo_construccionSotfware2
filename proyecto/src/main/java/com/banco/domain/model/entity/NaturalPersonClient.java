@@ -52,6 +52,14 @@ public class NaturalPersonClient {
     public String getAddress() { return address; }
     public UserStatus getStatus() { return status; }
     public UserRole getRole() { return role; }
+    
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setStatus(UserStatus status) { this.status = status; }
+    
+    public void deactivate() { this.status = UserStatus.INACTIVE; }
 
     public void validateRequiredFields() {
         if (fullName == null || fullName.isBlank()) throw new IllegalArgumentException("Full name is required");

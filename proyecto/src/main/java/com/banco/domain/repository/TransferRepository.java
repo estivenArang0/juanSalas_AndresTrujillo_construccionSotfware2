@@ -10,5 +10,7 @@ public interface TransferRepository {
     Optional<Transfer> findById(Long id);
     List<Transfer> findBySourceAccountNumber(String sourceAccountNumber);
     List<Transfer> findByStatus(TransferStatus status);
+    List<Transfer> findAllByStatus(TransferStatus status);
+    List<Transfer> findByAccountNumber(String accountNumber);
     List<Transfer> findBySourceAccountNumberOrDestinationAccountNumber(String sourceAccount, String targetAccount);
 }

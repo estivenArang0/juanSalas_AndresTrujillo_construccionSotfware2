@@ -1,2 +1,2 @@
 package com.banco.domain.model.valueobject;
-public enum TransferStatus { PENDING_APPROVAL, EXECUTED, REJECTED, EXPIRED }
+public enum TransferStatus { PENDING_APPROVAL, EXECUTED, REJECTED, EXPIRED, CANCELLED, APPROVED }

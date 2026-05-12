@@ -72,6 +72,8 @@ public class Loan {
     public String getDisbursementAccountNumber() { return disbursementAccountNumber; }
     public Long getAnalystId() { return analystId; }
     public LocalDate getRejectionDate() { return rejectionDate; }
+    
+    public void setStatus(LoanStatus status) { this.status = status; }
 
     public void approve(Long analystId, Money approvedAmount, BigDecimal interestRate) {
         if (this.status != LoanStatus.UNDER_REVIEW)

@@ -87,6 +87,10 @@ public class BankAccount {
     public boolean hasSufficientFunds(Money amount) {
         return this.balance != null && this.balance.isGreaterThanOrEqual(amount);
     }
+    
+    public boolean hasSufficientBalance(Money amount) {
+        return this.balance != null && this.balance.isGreaterThanOrEqual(amount);
+    }
 
     public boolean isActive() { return AccountStatus.ACTIVE.equals(this.status); }
 

@@ -2,7 +2,6 @@ package com.banco.domain.service;
 
 import com.banco.application.dto.request.AuditLogRequest;
 import com.banco.application.dto.request.RegisterRequest;
-import com.banco.application.dto.response.AuthResponse;
 import com.banco.application.port.output.AuditLogOutputPort;
 import com.banco.domain.exception.ResourceNotFoundException;
 import com.banco.domain.exception.UnauthorizedOperationException;

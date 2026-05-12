@@ -3,7 +3,9 @@ package com.banco.application.dto.request;
 import com.banco.domain.model.valueobject.UserRole;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+import lombok.Data;
 
+@Data
 public class RegisterRequest {
 
     @NotBlank(message = "Full name is required")
@@ -37,25 +39,4 @@ public class RegisterRequest {
     private String password;
 
     private String relatedEntityId;
-
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-    public String getIdentificationNumber() { return identificationNumber; }
-    public void setIdentificationNumber(String identificationNumber) { this.identificationNumber = identificationNumber; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public LocalDate getBirthDate() { return birthDate; }
-    public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public UserRole getRole() { return role; }
-    public void setRole(UserRole role) { this.role = role; }
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public String getRelatedEntityId() { return relatedEntityId; }
-    public void setRelatedEntityId(String relatedEntityId) { this.relatedEntityId = relatedEntityId; }
 }

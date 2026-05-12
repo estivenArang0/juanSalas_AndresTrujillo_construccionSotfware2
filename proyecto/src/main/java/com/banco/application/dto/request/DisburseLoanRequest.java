@@ -4,4 +4,5 @@ import lombok.Data;
 @Data
 public class DisburseLoanRequest {
     @NotBlank private String disbursementAccountNumber;
+    @NotBlank private String destinationAccountNumber;
 }

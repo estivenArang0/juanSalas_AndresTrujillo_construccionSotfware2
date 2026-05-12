@@ -32,12 +32,14 @@ C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfwar
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\request\RegisterRequest.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\response\BankAccountResponse.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\port\input\UserInputPort.java
+C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\request\UpdateNaturalPersonRequest.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\repository\TransferRepository.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\UserActivationService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\BankAccountUpdateService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\model\valueobject\UserRole.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\port\input\AuthInputPort.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\model\valueobject\LoanStatus.java
+C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\request\UpdateUserRequest.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\request\CreateLoanRequest.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\BankAccountCreateService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\AuthTokenService.java
@@ -79,6 +81,7 @@ C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfwar
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\AuthLoginService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\exception\EntityNotFoundException.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\response\NaturalPersonResponse.java
+C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\application\dto\request\UpdateCompanyClientRequest.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\NaturalPersonClientDeleteService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\domain\service\BankAccountDeactivationService.java
 C:\Users\Usuario\Desktop\proyecto-3\juanSalas_AndresTrujillo_construccionSotfware2\proyecto\src\main\java\com\banco\adapter\out\persistence\repository\TransferJpaRepository.java

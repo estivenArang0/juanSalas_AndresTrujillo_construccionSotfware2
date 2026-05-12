@@ -15,6 +15,9 @@ public class TransferResponse {
     private String currency;
     private LocalDateTime createdAt;
     private LocalDateTime approvedAt;
+    private LocalDateTime requestedAt;
+    private LocalDateTime executedAt;
+    private String description;
     private TransferStatus status;
     private Long creatorUserId;
     private Long approverUserId;

@@ -2,6 +2,8 @@ package com.banco.adapter.out.nosql;
 
 import com.banco.adapter.out.nosql.document.AuditLogDocument;
 import com.banco.adapter.out.nosql.repository.AuditLogMongoRepository;
+import com.banco.application.dto.request.AuditLogRequest;
+import com.banco.application.port.output.AuditLogOutputPort;
 import com.banco.domain.model.AuditLog;
 import com.banco.domain.repository.AuditLogRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +13,21 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class AuditLogRepositoryAdapter implements AuditLogRepository {
+public class AuditLogRepositoryAdapter implements AuditLogRepository, AuditLogOutputPort {
     private final AuditLogMongoRepository mongo;
+
+    @Override
+    public void log(AuditLogRequest logRequest) {
+        AuditLogDocument doc = AuditLogDocument.builder()
+                .operationType(logRequest.getOperationType())
+                .operationDateTime(logRequest.getOperationDateTime())
+                .userId(logRequest.getUserId())
+                .userRole(logRequest.getUserRole())
+                .affectedProductId(logRequest.getAffectedProductId())
+                .detailData(logRequest.getDetails())
+                .build();
+        mongo.save(doc);
+    }
 
     @Override
     public AuditLog save(AuditLog r) {

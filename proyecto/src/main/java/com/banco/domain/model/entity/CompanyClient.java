@@ -62,6 +62,14 @@ public class CompanyClient {
     public String getLegalRepresentativeId() { return legalRepresentativeId; }
     public UserStatus getStatus() { return status; }
     public UserRole getRole() { return role; }
+    
+    public void setBusinessName(String businessName) { this.businessName = businessName; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setLegalRepresentativeId(Long legalRepresentativeId) { this.legalRepresentativeId = String.valueOf(legalRepresentativeId); }
+    
+    public void deactivate() { this.status = UserStatus.INACTIVE; }
 
     public void validateRequiredFields() {
         if (businessName == null || businessName.isBlank()) throw new IllegalArgumentException("Business name is required");

@@ -4,7 +4,6 @@ import com.banco.application.dto.request.AuditLogRequest;
 import com.banco.application.dto.request.DisburseLoanRequest;
 import com.banco.application.dto.response.LoanResponse;
 import com.banco.application.port.output.AuditLogOutputPort;
-import com.banco.domain.exception.AccountOperationNotAllowedException;
 import com.banco.domain.exception.ResourceNotFoundException;
 import com.banco.domain.exception.UnauthorizedOperationException;
 import com.banco.domain.model.entity.BankAccount;

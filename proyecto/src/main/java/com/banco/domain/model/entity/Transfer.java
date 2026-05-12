@@ -21,6 +21,9 @@ public class Transfer {
         public TransferBuilder status(TransferStatus s) { t.status = s; return this; }
         public TransferBuilder creatorUserId(Long c) { t.creatorUserId = c; return this; }
         public TransferBuilder approverUserId(Long a) { t.approverUserId = a; return this; }
+        public TransferBuilder description(String d) { t.description = d; return this; }
+        public TransferBuilder requestedAt(LocalDateTime r) { t.requestedAt = r; return this; }
+        public TransferBuilder executedAt(LocalDateTime e) { t.executedAt = e; return this; }
         public Transfer build() { return t; }
     }
 
@@ -34,6 +37,9 @@ public class Transfer {
     private TransferStatus status;
     private Long creatorUserId;
     private Long approverUserId;
+    private String description;
+    private LocalDateTime requestedAt;
+    private LocalDateTime executedAt;
 
     public Long getId() { return id; }
     public String getSourceAccountNumber() { return sourceAccountNumber; }
@@ -45,6 +51,12 @@ public class Transfer {
     public TransferStatus getStatus() { return status; }
     public Long getCreatorUserId() { return creatorUserId; }
     public Long getApproverUserId() { return approverUserId; }
+    public String getDescription() { return description; }
+    public LocalDateTime getRequestedAt() { return requestedAt; }
+    public LocalDateTime getExecutedAt() { return executedAt; }
+    
+    public void setStatus(TransferStatus status) { this.status = status; }
+    public void setExecutedAt(LocalDateTime executedAt) { this.executedAt = executedAt; }
 
     // ✅ FIX 2: factory method para transferencia que requiere aprobación
     public static Transfer createPendingApproval(String sourceAccount, String destinationAccount,
