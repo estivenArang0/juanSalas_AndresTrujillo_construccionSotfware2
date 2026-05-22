@@ -1,0 +1,837 @@
+{
+  "info": {
+    "name": "Bank Management System API - SUSTENTACIÓN",
+    "description": "Colección para sustentación: Registrar analista, cliente, solicitar/rechazar/aprobar préstamo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "⭐ SUSTENTACIÓN - PASO A PASO",
+      "item": [
+        {
+          "name": "PASO 1️⃣ - Registrar Analista",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ana Martínez García\",\n  \"identificationNumber\": \"1099999999\",\n  \"email\": \"ana.martinez@banco.com\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1990-05-15\",\n  \"address\": \"Calle 123 # 45-67\",\n  \"role\": \"INTERNAL_ANALYST\",\n  \"username\": \"ana.martinez\",\n  \"password\": \"Password123!\",\n  \"relatedEntityId\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "✅ PRIMERO: Registra el analista que aprobará los préstamos - ROLE: INTERNAL_ANALYST"
+          }
+        },
+        {
+          "name": "PASO 2️⃣ - Registrar Cliente Natural",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Juan Carlos Pérez López\",\n  \"identificationNumber\": \"12345678901\",\n  \"email\": \"juan.perez@email.com\",\n  \"phone\": \"3109876543\",\n  \"birthDate\": \"1985-08-20\",\n  \"address\": \"Carrera 50 # 10-30\",\n  \"username\": \"juan.perez\",\n  \"password\": \"ClientPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register/natural-person",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register", "natural-person"]
+            },
+            "description": "✅ SEGUNDO: Registra el cliente que solicitará el préstamo"
+          }
+        },
+        {
+          "name": "PASO 3️⃣ - Login Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan.perez\",\n  \"password\": \"ClientPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "✅ TERCERO: Login del cliente - Copia el token en la variable {{jwt_token_cliente}}"
+          }
+        },
+        {
+          "name": "PASO 4️⃣ - Crear Cuenta Bancaria (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_cliente}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownerId\": \"12345678901\",\n  \"accountType\": \"SAVINGS\",\n  \"currency\": \"COP\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts"]
+            },
+            "description": "✅ CUARTO: Cliente crea su cuenta bancaria (SAVINGS) - Copia el número de cuenta para el desembolso"
+          }
+        },
+        {
+          "name": "PASO 5️⃣ - Solicitar Préstamo (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_cliente}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"12345678901\",\n  \"loanType\": \"PERSONAL\",\n  \"requestedAmount\": 10000000,\n  \"currency\": \"COP\",\n  \"termMonths\": 36\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans"]
+            },
+            "description": "✅ QUINTO: Cliente solicita préstamo - Copia el loanId de la respuesta"
+          }
+        },
+        {
+          "name": "PASO 6️⃣ - Login Analista",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ana.martinez\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "✅ SEXTO: Login del analista - Copia el token en la variable {{jwt_token_analista}}"
+          }
+        },
+        {
+          "name": "PASO 7️⃣ - Rechazar Préstamo (Analista)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_analista}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "reject"]
+            },
+            "description": "✅ SÉPTIMO: Analista rechaza el préstamo - Reemplaza '1' con el loanId"
+          }
+        },
+        {
+          "name": "PASO 8️⃣ - Solicitar Préstamo Nuevamente (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_cliente}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"12345678901\",\n  \"loanType\": \"PERSONAL\",\n  \"requestedAmount\": 10000000,\n  \"currency\": \"COP\",\n  \"termMonths\": 36\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans"]
+            },
+            "description": "✅ OCTAVO: Cliente solicita nuevamente - Copia el NUEVO loanId"
+          }
+        },
+        {
+          "name": "PASO 9️⃣ - Aprobar Préstamo (Analista) ✨",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_analista}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approvalNotes\": \"Aprobado: Cliente con buen historial crediticio. Verificado colateral.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "approve"]
+            },
+            "description": "✅ NOVENO: Analista APRUEBA el préstamo - Reemplaza '1' con el NUEVO loanId"
+          }
+        },
+        {
+          "name": "PASO 🔟 - Desembolsar Préstamo a la Cuenta (Analista)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token_analista}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"disbursementDetails\": \"Desembolso a cuenta creada en PASO 4. Referencia: LN-2024-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/disburse",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "disburse"]
+            },
+            "description": "✅ DÉCIMO: Analista desembolsa el dinero a la cuenta SAVINGS creada en PASO 4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 AUTENTICACIÓN",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"empleado1\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Iniciar sesión y obtener JWT token"
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Juan Pérez García\",\n  \"identificationNumber\": \"1234567890\",\n  \"email\": \"juan.perez@example.com\",\n  \"phone\": \"3001234567\",\n  \"birthDate\": \"1990-05-15\",\n  \"address\": \"Calle 123 # 45-67\",\n  \"role\": \"INTERNAL_ANALYST\",\n  \"username\": \"juan.perez\",\n  \"password\": \"SecurePass123!\",\n  \"relatedEntityId\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Registrar un nuevo usuario en el sistema"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Cerrar sesión actual"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"SecurePass123!\",\n  \"newPassword\": \"NewSecurePass456!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "change-password"]
+            },
+            "description": "Cambiar contraseña del usuario autenticado"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 USUARIOS",
+      "item": [
+        {
+          "name": "Register Natural Person",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Carlos Alberto Rodríguez López\",\n  \"identificationNumber\": \"98765432100\",\n  \"email\": \"carlos.rodriguez@email.com\",\n  \"phone\": \"3109876543\",\n  \"birthDate\": \"1985-08-20\",\n  \"address\": \"Carrera 50 # 10-30\",\n  \"username\": \"carlos.rodriguez\",\n  \"password\": \"Password2024!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register/natural-person",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register", "natural-person"]
+            },
+            "description": "Registrar una persona natural como cliente del banco"
+          }
+        },
+        {
+          "name": "Register Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"legalName\": \"Tecnologías Avanzadas S.A.S.\",\n  \"taxId\": \"860123456-7\",\n  \"email\": \"info@tecavanzada.com\",\n  \"phone\": \"6012345678\",\n  \"address\": \"Calle 80 # 50-60, Bogotá\",\n  \"legalRepresentativeId\": \"123456789\",\n  \"username\": \"tecavanzada.admin\",\n  \"password\": \"CompanyPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register/company",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register", "company"]
+            },
+            "description": "Registrar una empresa como cliente del banco"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            },
+            "description": "Obtener información de un usuario por su ID. Requiere roles: INTERNAL_ANALYST, TELLER_EMPLOYEE, COMMERCIAL_EMPLOYEE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 CUENTAS BANCARIAS",
+      "item": [
+        {
+          "name": "Create Bank Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownerId\": \"123456789\",\n  \"accountType\": \"SAVINGS\",\n  \"currency\": \"COP\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts"]
+            },
+            "description": "Crear una nueva cuenta bancaria. Account Types: CHECKING, SAVINGS, INVESTMENT"
+          }
+        },
+        {
+          "name": "Get Account by Account Number",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/4001234567",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "4001234567"]
+            },
+            "description": "Obtener detalles de una cuenta por su número"
+          }
+        },
+        {
+          "name": "Get Accounts by Owner",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/owner/123456789",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "owner", "123456789"]
+            },
+            "description": "Obtener todas las cuentas de un propietario"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💸 TRANSFERENCIAS",
+      "item": [
+        {
+          "name": "Create Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceAccountNumber\": \"4001234567\",\n  \"destinationAccountNumber\": \"4009876543\",\n  \"amount\": 500000,\n  \"currency\": \"COP\",\n  \"description\": \"Pago de servicios mensuales\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transfers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transfers"]
+            },
+            "description": "Crear una nueva transferencia. Roles requeridos: NATURAL_PERSON_CLIENT, COMPANY_EMPLOYEE, COMPANY_SUPERVISOR"
+          }
+        },
+        {
+          "name": "Approve Transfer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transfers", "1", "approve"]
+            },
+            "description": "Aprobar una transferencia. Solo COMPANY_SUPERVISOR"
+          }
+        },
+        {
+          "name": "Reject Transfer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transfers", "1", "reject"]
+            },
+            "description": "Rechazar una transferencia. Solo COMPANY_SUPERVISOR"
+          }
+        },
+        {
+          "name": "Get Transfer by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transfers", "1"]
+            },
+            "description": "Obtener detalles de una transferencia por su ID"
+          }
+        },
+        {
+          "name": "Get Pending Transfers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/pending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transfers", "pending"]
+            },
+            "description": "Obtener todas las transferencias pendientes de aprobación. Roles: COMPANY_SUPERVISOR, INTERNAL_ANALYST"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 PRÉSTAMOS",
+      "item": [
+        {
+          "name": "Create Loan Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"123456789\",\n  \"loanType\": \"PERSONAL\",\n  \"requestedAmount\": 10000000,\n  \"currency\": \"COP\",\n  \"termMonths\": 36\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans"]
+            },
+            "description": "Solicitar un nuevo préstamo. Loan Types: PERSONAL, HOME, BUSINESS, AUTO"
+          }
+        },
+        {
+          "name": "Approve Loan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approvalNotes\": \"Aprobado: Cliente con buen historial crediticio. Verificado colateral.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "approve"]
+            },
+            "description": "Aprobar un préstamo. Solo INTERNAL_ANALYST"
+          }
+        },
+        {
+          "name": "Reject Loan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "reject"]
+            },
+            "description": "Rechazar un préstamo. Solo INTERNAL_ANALYST"
+          }
+        },
+        {
+          "name": "Disburse Loan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"disbursementDetails\": \"Desembolso a cuenta 4001234567. Referencia: LN-2024-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loans/1/disburse",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1", "disburse"]
+            },
+            "description": "Desembolsar un préstamo aprobado. Solo INTERNAL_ANALYST"
+          }
+        },
+        {
+          "name": "Get Loan by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loans/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "1"]
+            },
+            "description": "Obtener detalles de un préstamo por su ID"
+          }
+        },
+        {
+          "name": "Get Loans by Client",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loans/client/123456789",
+              "host": ["{{base_url}}"],
+              "path": ["api", "loans", "client", "123456789"]
+            },
+            "description": "Obtener todos los préstamos de un cliente"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 AUDITORÍA",
+      "item": [
+        {
+          "name": "Get All Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/audit/all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audit", "all"]
+            },
+            "description": "Obtener todos los logs de auditoría del sistema. Solo INTERNAL_ANALYST"
+          }
+        },
+        {
+          "name": "Get My Operations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/audit/my-operations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audit", "my-operations"]
+            },
+            "description": "Obtener mis operaciones registradas en auditoría"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string",
+      "description": "Token general (DEPRECATED - usar jwt_token_cliente o jwt_token_analista)"
+    },
+    {
+      "key": "jwt_token_cliente",
+      "value": "",
+      "type": "string",
+      "description": "Token del cliente (Juan Pérez)"
+    },
+    {
+      "key": "jwt_token_analista",
+      "value": "",
+      "type": "string",
+      "description": "Token del analista (Ana Martínez)"
+    },
+    {
+      "key": "loan_id",
+      "value": "1",
+      "type": "string",
+      "description": "ID del préstamo actual"
+    }
+  ]
+}

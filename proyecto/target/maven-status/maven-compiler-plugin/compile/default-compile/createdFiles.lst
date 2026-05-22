@@ -95,6 +95,7 @@ com\banco\domain\exception\EntityNotFoundException.class
 com\banco\application\dto\response\NaturalPersonResponse$NaturalPersonResponseBuilder.class
 com\banco\application\usecase\BankAccountUseCase.class
 com\banco\application\dto\response\ApiResponse.class
+com\banco\adapter\in\web\controller\AuditLogController.class
 com\banco\domain\repository\UserRepository.class
 com\banco\adapter\out\persistence\repository\CompanyClientJpaRepository.class
 com\banco\domain\service\LoanApprovalService.class

@@ -21,7 +21,7 @@ public class TransferExpirationScheduler {
     private final TransferRepository transferRepository;
     private final AuditLogService bitacoraService;
 
-    @Value("${banco.transfer.tiempo-vencimiento-minutos:60}")
+    @Value("${banco.transferencia.tiempo-vencimiento-minutos:60}")
     private int minutosVencimiento;
 
     @Scheduled(fixedDelay = 60000) // cada minuto

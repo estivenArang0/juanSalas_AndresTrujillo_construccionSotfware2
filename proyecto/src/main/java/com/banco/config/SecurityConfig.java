@@ -20,23 +20,34 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable()) // Deshabilitado para que Postman pueda hacer POST
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/api-docs/**", "/h2-console/**").permitAll()
+                // Se agrega "/api/users/register/**" para permitir el registro de personas y empresas
+                .requestMatchers(
+                    "/api/auth/**", 
+                    "/api/users/register/**", 
+                    "/swagger-ui/**", 
+                    "/api-docs/**", 
+                    "/h2-console/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
-            .headers(h -> h.frameOptions(f -> f.disable()))
+            .headers(h -> h.frameOptions(f -> f.disable())) // Necesario para ver la consola H2 si la usas
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public PasswordEncoder passwordEncoder() { 
+        return new BCryptPasswordEncoder(); 
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
